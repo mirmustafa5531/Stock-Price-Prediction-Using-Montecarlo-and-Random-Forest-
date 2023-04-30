@@ -1,0 +1,153 @@
+body {
+    margin: 0;
+  } 
+
+
+
+.article {
+  display: inline-block;
+  width: 320px;
+  margin: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.article img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 5px 5px 0 0;
+}
+
+.article h2 {
+  margin: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.article p {
+  margin: 0 15px 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.article ul {
+  margin: 0 15px 15px;
+  padding: 0;
+}
+
+.article ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.article .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f7f7f7;
+  border-top: 1px solid #ccc;
+  border-radius: 0 0 5px 5px;
+}
+
+.article .meta span {
+  font-size: 14px;
+  color: #777;
+}
+
+.article .meta a {
+  font-size: 14px;
+  color: #0077c0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.article .meta a:hover {
+  color: #003d6b;
+}
+
+
+nav {
+background-color: #000;
+height: 50px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 20px;
+}
+
+nav .logo a {
+color: #fff;
+font-size: 24px;
+font-weight: 700;
+text-transform: uppercase;
+text-decoration: none;
+}
+
+nav .menu-icon {
+display: none;
+color: #fff;
+font-size: 24px;
+}
+
+nav .menu {
+display: flex;
+justify-content: flex-end;
+align-items: center;
+}
+
+nav .menu li {
+margin-left: 20px;
+list-style: none;
+}
+
+nav .menu li a {
+color: #fff;
+text-decoration: none;
+text-transform: uppercase;
+transition: all 0.3s ease;
+}
+
+nav .menu li a:hover {
+color: #0077c0;
+}
+
+@media screen and (max-width: 768px) {
+nav .menu {
+    display: none;
+}
+
+nav .menu-icon {
+    display: block;
+    cursor: pointer;
+}
+
+nav .menu-icon i {
+    color: #fff;
+}
+
+nav.responsive .menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+}
+
+nav.responsive .menu li {
+    margin: 10px 0;
+}
+}
+.table-block {
+  width: 40%;
+  max-height: 500px;
+  overflow-y: auto;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Top Finance News </title>
+    <!-- ----linked style.css file---- -->
+    <link rel="stylesheet" type="text/css" href="{% static 'dsp\static\stylecss.css' %}">
+
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <div class="container">
+      <h1>Top finance news </h1>
+      <div class="articles">
+        {% for article in articles %}
+          <div class="article">
+            <div class="article">
+                <img src="{{ article.thumbnail.resolutions.0.url }}" alt="Article thumbnail">
+                <ul>
+                  {% for bullet_point in article.bullet_points %}
+                    <li>{{ bullet_point }}</li>
+                  {% endfor %}
+                </ul>
+              </div>              
+            <div class="content">
+              <div class="title">{{ article.title }}</div>
+              <div class="summary">{{ article.summary }}</div>
+              <ul class="bullet-points">
+                {% for bullet_point in article.bullet_points %}
+                  <li>{{ bullet_point }}</li>
+                {% endfor %}
+              </ul>
+              <div class="meta">
+                <p>Published by : {{ article.publisher}}</p>
+                <a href="{{ article.link }}">Read More</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content  %}
+    {% if chart %}
+        <img src = "data:image/png;base64, {{charts|safe}}"
+    {% endif %}  
+
+    <div class = "container mt-3">
+        {% if MLDT %}
+        <h1>Decison Trees </h1>
+          <img src="data:image/png;base64,{{ MLDT }}">
+        {% endif %}   
+        
+    </div>
+
+
+
+{% endblock content %}

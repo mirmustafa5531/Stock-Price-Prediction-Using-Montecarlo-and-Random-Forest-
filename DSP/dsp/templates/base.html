@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Quantify </title>
+    <link
+      rel="shortcut icon"
+      href="crud\static\images\title-logo.png"
+      type="image/x-icon"
+    />
+
+    <!-- ----linked font -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    
+    <!-- ----linked style.css file---- -->
+    <link rel="stylesheet" type="text/css" href="{% static 'dsp\static\stylecss.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    
+    <!-- Bootstrap------->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+ </head>
+  <body>
+    {% include 'navbar.html' %}    
+    <div class="container mt-5">
+      <h2 class="text-center alert alert-danger mb-4">Predicting Stock Prices Using Machine Learning</h2>
+      <form class="form" action="{% url 'search_post' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+          <input type="text" class="form-control form-control-md" id="search_value" name="search_value" placeholder="Search stocks by company ticker..." required>
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Go</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+        
+      {% if name %}
+      <div class = "table-responsive table-block" style="width: 40%;">
+        <h3>{{ name.Name }}</h3>
+        <table class ="table table-striped table-bordered">
+          <tr>
+            <td>Symbol</td>
+            <td>{{ name.Symbol }}</td>
+          </tr>
+          <tr>
+            <td>Exchange Listed</td>
+            <td>{{ name.Exchange }}</td>
+          </tr>
+          <tr>
+            <td>Industry</td>
+            <td>{{ name.Industry }}</td>
+          </tr>
+          <tr>
+            <td>Market Cap</td>
+            <td>{{ name.MarketCapitalization }}</td>
+          </tr>
+          <tr>
+            <td>PE Ratio</td>
+            <td>{{ name.PERatio}}</td>
+          </tr>
+          <tr>
+            <td>Price to sales Ratio</td>
+            <td>{{ name.PriceToSalesRatioTTM }}</td>
+          </tr>
+          <tr>
+            <td>price to Book Ratio</td>
+            <td>{{ name.PriceToBookRatio}}</td>
+          </tr>
+          <tr>
+            <td>Forward PE</td>
+            <td>{{ name.ForwardPE}}</td>
+          </tr>
+          <tr>
+            <td>200 Day Moving Average</td>
+            <td>{{ name.200DayMovingAverage}}</td>
+          </tr>
+          <tr>
+            <td>52 Week Low</td>
+            <td>{{ name.52WeekLow}}</td>
+          </tr>
+          <tr>
+            <td>52 Week High</td>
+            <td>{{ name.52WeekHigh}}</td>
+          </tr>
+          <tr>
+            <td>Analyst Target price</td>
+            <td>{{ name.AnalystTargetPrice}}</td>
+          </tr>
+          <tr>
+            <td> Company Description</td>
+            <td>{{ name.Description}}</td>
+          </tr>
+
+        </table>
+      </div>
+      {% endif %}
+     
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+      <script>
+      $( function() {
+        $( "#search_value" ).autocomplete({
+          source: '{% url  'search' %}',
+          select: function( event, ui ) {
+            var stock_name = ui.item.value.split(" - ")[0];
+            $( "#search_value" ).val(stock_name);
+            return false;
+          }
+        }); 
+      });  
+    </script>
+
+       <div class = "container mt-3">
+          {% if charts %}
+          <h1>Monte Carlo Simulation</h1>
+            <img src="data:image/png;base64,{{ charts }}">
+          {% endif %}   
+          
+        </div>
+        <div class = "container mt-3">
+          {% if MLDT %}
+          <h1>Random Forest Classisier </h1>
+            <img src="data:image/png;base64,{{ MLDT }}">
+          {% endif %}   
+          
+        </div>
+              
+  </body>
+</html>
