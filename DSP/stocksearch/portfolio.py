@@ -17,6 +17,7 @@ import yfinance as yf
 from io import BytesIO
 import base64
 
+
 #FY_ID, APP_ID_TYPE, TOTP_KEY, PIN,client_id,SECRET_KEY,REDIRECT_URI
 
 APP_ID =  "1HJC4Q80HO"
@@ -133,10 +134,12 @@ def send_otp_and_verify_totp(FY_ID, APP_ID_TYPE, TOTP_KEY, PIN,client_id,SECRET_
     access_token= response["access_token"]
 
     fyers = fyersModel.FyersModel(client_id=client_id, token=access_token, log_path=os.getcwd())
-    weights = sharperatio(fyers)
-    portfolio_volatility(fyers,weights)
+    portfolioanalysing  = portfolio_analysing(fyers)  #portfolioanalysing 
+    calculate_sharpe_volatility = sharperatio(fyers, portfolioanalysing[0])   
+    graph2 = weightsdistribution(fyers)
+    return portfolioanalysing, calculate_sharpe_volatility,graph2
 
-def sharperatio(fyers):
+def portfolio_analysing(fyers):
     holdings = fyers.holdings()
     print(holdings)
     total_cost = 0                                #  Total price at which the user bought security 
@@ -172,33 +175,27 @@ def sharperatio(fyers):
     for i in quantity_1 :
         quantity_2.append(i/total_quantity * 100)                  # Calculating individual Portfolio weights
     
-    
+   
     portfolio_return = math.log(total_current_value / total_cost) 
     annual_return = portfolio_return * 252                          # Assuming 252 trading days in a year
     portfolio_individual_volatility = math.sqrt(sum([h * w for h, w in zip(holding_volatilities, quantity_2)]))
     holding_contributions = [h * w / portfolio_individual_volatility for h, w in zip(holding_volatilities, quantity_3)]
-    plt.switch_backend('AGG')
-    # Plot a pie chart
-    sns.set_style('darkgrid')
-    plt.figure(figsize=(8,6))
-    plt.pie(quantity_3, labels=symbols, autopct='%1.1f%%', startangle=90)
-    plt.title('Portfolio Weights')
-    graphic = get_graph()
-
+  
     # create a pandas dataframe with symbol and holding contributions
     df = pd.DataFrame({'Symbol': symbols, 'Holding Contributions': holding_contributions})
-    # create the barplot using seaborn
+    
     sns.set_style('darkgrid')
+    plt.switch_backend('Agg')
     ax = sns.barplot(x='Symbol', y='Holding Contributions', data=df)
-    ax.set_title('Holding Contributions to Portfolio Volatility')
+    ax.set_title('Individual Stocks Contributions to Portfolio Volatility')
     ax.set_ylabel('Holding Contributions (%)')
     ax.set_xlabel('Symbol')
-    ax.tick_params(axis='x', labelrotation=45)
-    graphic1 = get_graph()
+    ax.tick_params(axis='x',   labelsize=12)
+    graphs = get_graph()
+    return quantity_3,quantity_2,holding_contributions,annual_return,graphs
 
-    return quantity_3,annual_return,holding_contributions,quantity_2,graphic,graphic1
-
-def portfolio_volatility(fyers, weights):
+def sharperatio(fyers, weights):
+   
     holdings = fyers.holdings()
     symbols = [h['symbol'] for h in holdings['holdings']]
     
@@ -219,22 +216,51 @@ def portfolio_volatility(fyers, weights):
     sharpe_ratio = ((returns.mean()*252) - 0.05) / volatility
     # Calculate the portfolio volatility using np.std()
     portfolio_volatility = np.std(returns.dot(weight.T)) * np.sqrt(252)
-    return portfolio_volatility,sharpe_ratio
    
-def get_graph():
-  buffer = BytesIO()
-  plt.savefig(buffer , format = 'png')
-  buffer.seek(0)
-  image_png = buffer.getvalue()
-  graph = base64.b64encode(image_png)
-  graph = graph.decode('utf-8')
-  buffer.close()
-  return graph
 
- 
-#a = send_otp_and_verify_totp(FY_ID, APP_ID_TYPE, TOTP_KEY, PIN,client_id,SECRET_KEY,REDIRECT_URI)
-   
+    sharpe_ratio_str = str(sharpe_ratio)
+    sharpe_ratio_str = sharpe_ratio_str.replace('dtype: float64','')
     
+    return portfolio_volatility,sharpe_ratio_str
+   
+
+def weightsdistribution(fyers):
+    holdings = fyers.holdings()                   
+    quantity_3 = []                                                                                  #Calculating Portfolio weights based on price
+    symbols = [] 
+    for holding in holdings['holdings']:
+        cost_price = holding['costPrice']
+        quantity = holding['quantity']
+        symbols.append(holding['symbol'])  
+        a = holdings['overall']['total_current_value']
+        quantity_3.append(cost_price*quantity/a)
+   
+    plt.switch_backend('Agg')
+    # Plot a pie chart
+    sns.set_style('darkgrid')
+    plt.pie(quantity_3, labels=symbols, autopct='%1.1f%%', startangle=90)
+    plt.title('Portfolio Weights Distributions')
+    graph2 = get_graph()
+    return graph2
+   
+
+
+def get_graph():
+    buffer = BytesIO()
+    plt.savefig(buffer , format='png',dpi = 600)
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    graph = base64.b64encode(image_png)
+    graph = graph.decode('utf-8')
+    
+    # Save the image locally for checking
+    os.makedirs('graphs', exist_ok=True)  # create directory if it doesn't exist
+    with open('graphs/graph.png', 'wb') as f:
+        f.write(image_png)
+        
+    buffer.close()
+    return graph
+
 
 
 
