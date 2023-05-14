@@ -75,8 +75,28 @@ PIN = "8501"  #  pin for fyers account
 
 REDIRECT_URI = "https://www.google.co.uk/"  # Redirect url from the app.
 
+
 def portfolioanalyser(request):
-    portfolio.send_otp_and_verify_totp(FY_ID, APP_ID_TYPE, TOTP_KEY, PIN,client_id,SECRET_KEY,REDIRECT_URI)
+    viewportfolio = portfolio.send_otp_and_verify_totp(FY_ID, APP_ID_TYPE, TOTP_KEY, PIN,client_id,SECRET_KEY,REDIRECT_URI)
+    portfolio_weight = viewportfolio[0][0]
+    individual_weights = viewportfolio[0][1]
+    individual_volatility = viewportfolio[0][2]
+    annual_return = viewportfolio[0][3]
+    total_volatility = viewportfolio[1][0]
+    sharpe_ratio = viewportfolio[1][1]
+    graph1  = viewportfolio[0][4]
+    graph2 = viewportfolio[2]
+  
+     
+    return render(request, 'portfolio.html', {'portfolio_weight': portfolio_weight,
+                                               'individual_weights': individual_weights,
+                                               'individual_volatility': individual_volatility,
+                                               'annual_return': annual_return,
+                                               'total_volatility': total_volatility,
+                                               'sharpe_ratio': sharpe_ratio,
+                                               'holding_contribution_fig': graph1,
+                                               'portfolio_weight_distribution':graph2                                             
+                                               })
     
     
    
