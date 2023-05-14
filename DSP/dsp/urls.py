@@ -23,6 +23,7 @@ urlpatterns = [
     path('home', views.show, name='home'),
     path('search/', views.search, name='search'), 
     path('search_post',views.search_post, name = 'search_post'),
-    path('news.html', views.news, name='news'),     
+    path('news.html', views.news, name='news'),    
+    path('portfolio.html', views.portfolioanalyser, name='portfolioanalyser'),     
 ]
 
