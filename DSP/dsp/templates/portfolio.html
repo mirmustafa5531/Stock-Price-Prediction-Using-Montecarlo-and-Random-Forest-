@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Portfolio Analyser</title>
+	<!-- Load Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+		.graphs {
+			display: flex;
+			flex-direction: column;
+		}
+		.graphs img {
+			max-width: 100%;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+	<div class="container">
+		<h1>Portfolio Analyser</h1>
+		<hr>
+
+		<div class="row">
+			<div class="col-md-8">
+				<!-- Display portfolio weight based on price -->
+				<h3>Portfolio Weights Based on Total Value:</h3>
+				<p>{{ portfolio_weight }}</p>
+				<!-- Display individual weights based on quantity -->
+				<h3>Portfolio Weights Based on Quantity:</h3>
+				<p>{{ individual_weights }}</p>
+				<!-- Display individual volatility contributes by each stock -->
+				<h3>Volatility contributed by each individual stock in the portfolio:</h3>
+				<p>{{ individual_volatility }}</p>
+				<!-- Display annual return -->
+				<h3>Annual Return:</h3>
+				<p>{{ annual_return }}</p>
+				<!-- Display total volatility of portfolio -->
+				<h3>Portfolio's Overall Volatility:</h3>
+				<p>{{ total_volatility }}</p>
+				<!-- Display sharpe ratio of each stock -->
+				<h3>Sharpe Ratio of Each Stock:</h3>
+				<p>{{ sharpe_ratio|safe }}</p>
+			</div>
+
+			<div class="col-md-4 graphs">
+				<div class="mb-3">
+					{% if holding_contribution_fig %}
+					<h3>Holding Contribution:</h3>
+					<img src="data:image/png;base64,{{ holding_contribution_fig }}" class="img-fluid">
+					{% endif %}
+				</div>
+				<div class="mb-3">
+					{% if portfolio_weight_distribution %}
+					<h3>Portfolio Weights:</h3>
+					<img src="data:image/png;base64,{{ portfolio_weight_distribution }}" class="img-fluid">
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Load Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
